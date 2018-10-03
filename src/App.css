@@ -1,0 +1,54 @@
+* {
+  box-sizing: border-box;
+}
+
+.app {
+  text-align: center;
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.app-title {
+  font-size: calc(20px + 0.5vw);
+  width: 100%;
+}
+
+.menu {
+  width: 30%;
+  background-color: #696C6CFF;
+  height: 92vh;
+}
+
+.attractions-select {
+  background-color: white;
+  border: 1px solid #fff;
+  font-size: calc(12px + 0.5vw);
+  margin: 5px;
+  padding: 0 2px;
+  width: calc(100% - 15px);
+}
+
+.attractions-list {
+  list-style: outside none none;
+  text-align: left;
+  color: #EFF5F5FF;
+  font-size: calc(12px + 0.5vw);
+  margin: 0;
+  padding: 10px;
+}
+
+.attractions-list li {
+  margin: 20px 0;
+}
+.mapDiv {
+  width: 70%;
+}
+
+.App-header {
+  background-color: #222;
+  height: 150px;
+  padding: 20px;
+  color: white;
+}
+
+
