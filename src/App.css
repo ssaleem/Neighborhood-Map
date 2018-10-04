@@ -8,15 +8,18 @@
   flex-wrap: wrap;
 }
 
+.head {
+  width: 100%;
+  height: 10vh;
+}
 .app-title {
   font-size: calc(20px + 0.5vw);
-  width: 100%;
 }
 
-.menu {
+.sidebar {
   width: 30%;
   background-color: #696C6CFF;
-  height: 92vh;
+  height: 90vh;
 }
 
 .attractions-select {
@@ -26,6 +29,11 @@
   margin: 5px;
   padding: 0 2px;
   width: calc(100% - 15px);
+}
+
+.attractions-select option {
+  overflow: hidden;
+  text-overflow:ellipsis;
 }
 
 .attractions-list {
@@ -40,15 +48,31 @@
 .attractions-list li {
   margin: 20px 0;
 }
+
 .mapDiv {
   width: 70%;
 }
 
-.App-header {
-  background-color: #222;
-  height: 150px;
-  padding: 20px;
-  color: white;
+.infowindow {
+  width: 250px;
+  height: 140px;
+  padding: 0;
+  /*margin: 0;*/
 }
+.attraction-info {
+  display: flex;
+}
+
+.attraction-img {
+  max-height: 110px;
+  width: 40%;
+}
+
+.attraction-tip {
+  width: 60%;
+  text-align: left;
+  padding-left: 10px;
+}
+
 
 
