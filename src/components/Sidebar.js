@@ -3,9 +3,9 @@ import List from './List'
 
 class Sidebar extends Component {
 	render(){
-		const {categories, visibleLocations, selectCategory, listClick} = this.props
+		const {categories, visibleLocations, selectCategory, listClick, classname} = this.props
 		return(
-			<div className="sidebar">
+			<div className={classname}>
 	          <select name="attractions" className="attractions-select" onChange={event => selectCategory(event.target.value)}>
 	            <option value="all">Select Category</option>
 	            {categories.map((category, index) => (

@@ -1,14 +1,20 @@
 import React, { Component } from 'react';
+import { library } from '@fortawesome/fontawesome-svg-core'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faBars } from '@fortawesome/free-solid-svg-icons'
+import { faGithub } from '@fortawesome/free-brands-svg-icons'
 import './App.css';
 import Sidebar from './components/Sidebar'
 import MyMap from './components/MyMap'
+
+library.add(faBars, faGithub)
 
 class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      center: {lat: 28.012967, lng: -82.46937},
-      zoom: 12,
+      center: {lat: 28.007216, lng: -82.41949},
+      zoom: 11,
       locations: [
         {title: 'Busch Gardens',       category: 'Amusement Park', location: {lat: 28.037216, lng: -82.41949}, vid: '4b0586c3f964a5202a6d22e3'},
         {title: 'Adventure Island',    category: 'Amusement Park', location: {lat: 28.041735, lng: -82.413059}, vid: '4b0586c3f964a520376d22e3'},
@@ -21,7 +27,8 @@ class App extends Component {
       filteredLocations: [],
       showingInfoWindow: false,
       activeMarker: {},
-      selectedPlace: {}
+      selectedPlace: {},
+      menuClicked: false
     };
     // Refs to link list items with markers
     this.markerRefs = this.state.locations.map(() => React.createRef());
@@ -29,6 +36,7 @@ class App extends Component {
     this.onMarkerClick = this.onMarkerClick.bind(this);
     this.onListClick = this.onListClick.bind(this);
     this.onSelectCategory = this.onSelectCategory.bind(this);
+    this.onMenuClicked = this.onMenuClicked.bind(this);
   }
 
   openInfoWindow(props, marker){
@@ -57,9 +65,11 @@ class App extends Component {
 
   onMapClicked = (props) => {
     if (this.state.showingInfoWindow) {
+      this.closeInfoWindow();
+    }
+    if(this.state.menuClicked){
       this.setState({
-        showingInfoWindow: false,
-        activeMarker: null
+        menuClicked: false
       })
     }
   };
@@ -79,18 +89,26 @@ class App extends Component {
     console.log(this.state.filteredLocations)
   }
 
+  onMenuClicked(){
+    this.setState({
+      menuClicked: (this.state.menuClicked ? false : true)
+    })
+  }
+
   render() {
     return (
       <div className="app">
-        <div className="head">
-        <h1 className="app-title">Things to Do in Tampa</h1>
-        </div>
+        <header className="head">
+          <FontAwesomeIcon icon="bars" className="app-menu" onClick={this.onMenuClicked}/>
+          <h1 className="app-title">Things to Do in Tampa Bay</h1>
+        </header>
 
         <Sidebar
           categories={this.state.categories}
           visibleLocations={this.state.filteredLocations.length === 0 ? this.state.locations : this.state.filteredLocations}
           selectCategory={this.onSelectCategory}
           listClick={this.onListClick}
+          classname={this.state.menuClicked ? "sidebar-expanded" : "sidebar"}
         />
 
         <MyMap
@@ -106,6 +124,10 @@ class App extends Component {
           selectedPlace={this.state.selectedPlace}
           allLocations={this.state.locations}
         />
+
+        <footer className="footer">
+          <a href="https://github.com/ssaleem"><p><FontAwesomeIcon icon={["fab", "github"]} /> ssaleem</p></a>
+        </footer>
       </div>
     )
   }
