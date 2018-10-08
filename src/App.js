@@ -28,15 +28,20 @@ class App extends Component {
       showingInfoWindow: false,
       activeMarker: {},
       selectedPlace: {},
-      menuClicked: false
+      menuClicked: false,
+      googleMapLoaded: true
     };
-    // Refs to link list items with markers
+    // Refs are used to store marker node references in an array and ilink locations in sidebar with markers
+    // more on refs => https://reactjs.org/docs/refs-and-the-dom.html
     this.markerRefs = this.state.locations.map(() => React.createRef());
+    // setting context for 'this' to class
+    this.openInfoWindow = this.openInfoWindow.bind(this);
     this.closeInfoWindow = this.closeInfoWindow.bind(this);
-    this.onMarkerClick = this.onMarkerClick.bind(this);
     this.onListClick = this.onListClick.bind(this);
+    this.onMapClicked = this.onMapClicked.bind(this);
     this.onSelectCategory = this.onSelectCategory.bind(this);
     this.onMenuClicked = this.onMenuClicked.bind(this);
+    this.onMapError = this.onMapError.bind(this);
   }
 
   openInfoWindow(props, marker){
@@ -54,28 +59,25 @@ class App extends Component {
     })
   }
 
-  onMarkerClick(props, marker){
-    this.openInfoWindow(props, marker)
-  }
-
+  //retrieve the appropriate marker and props based on index of location clicked in sidebar
+  //indexes in filtered list of location correspond to indexs in markerRefs array
   onListClick(index){
-    console.log(this.markerRefs)
-    this.openInfoWindow(this.markerRefs[index].current.props, this.markerRefs[index].current.marker)
+    this.state.googleMapLoaded && this.openInfoWindow(this.markerRefs[index].current.props, this.markerRefs[index].current.marker);
+    this.setState({
+      menuClicked: false
+    })
   }
 
-  onMapClicked = (props) => {
-    if (this.state.showingInfoWindow) {
-      this.closeInfoWindow();
-    }
+  onMapClicked(){
+    this.state.showingInfoWindow && this.closeInfoWindow();
     if(this.state.menuClicked){
       this.setState({
         menuClicked: false
       })
     }
-  };
+  }
 
   onSelectCategory(category){
-    console.log(category)
     if(category === 'all'){
       this.setState({
         filteredLocations: []
@@ -86,7 +88,6 @@ class App extends Component {
         filteredLocations: (this.state.locations.filter(location => location.category === category))
       })
     }
-    console.log(this.state.filteredLocations)
   }
 
   onMenuClicked(){
@@ -95,11 +96,18 @@ class App extends Component {
     })
   }
 
+  onMapError(){
+    this.setState({
+      googleMapLoaded: false
+    })
+  }
+
   render() {
     return (
       <div className="app">
         <header className="head">
-          <FontAwesomeIcon icon="bars" className="app-menu" onClick={this.onMenuClicked}/>
+          {/* menu icon available only on smaller screens for responsive design*/}
+          <FontAwesomeIcon icon="bars" className="open-sidebar" tabIndex="0" onClick={this.onMenuClicked}/>
           <h1 className="app-title">Things to Do in Tampa Bay</h1>
         </header>
 
@@ -108,7 +116,7 @@ class App extends Component {
           visibleLocations={this.state.filteredLocations.length === 0 ? this.state.locations : this.state.filteredLocations}
           selectCategory={this.onSelectCategory}
           listClick={this.onListClick}
-          classname={this.state.menuClicked ? "sidebar-expanded" : "sidebar"}
+          classname={this.state.menuClicked ? "sidebar-expanded" : "sidebar"  /* show/hide sidebar */}
         />
 
         <MyMap
@@ -116,13 +124,15 @@ class App extends Component {
           center={this.state.center}
           mapClicked={this.onMapClicked}
           visibleLocations={this.state.filteredLocations.length === 0 ? this.state.locations : this.state.filteredLocations}
-          markerClick={this.onMarkerClick}
+          markerClick={this.openInfoWindow}
           refs={this.markerRefs}
           activeMarker={this.state.activeMarker}
           showingInfoWindow={this.state.showingInfoWindow}
           closeInfoWindow={this.closeInfoWindow}
           selectedPlace={this.state.selectedPlace}
           allLocations={this.state.locations}
+          mapLoaded={this.state.googleMapLoaded}
+          mapError={this.onMapError}
         />
 
         <footer className="footer">

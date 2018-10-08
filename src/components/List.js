@@ -9,16 +9,13 @@ class List extends Component {
 	render() {
 		const attractions = this.props.attractions
 		return (
-			<section className="list-view">
-
-				<ol className="attractions-list">
-					{attractions.map((attraction, index) => (
-						<li key={index} onClick={(event => this.handleClick(index))}>
-							{attraction.title}
-						</li>
-					))}
-				</ol>
-			</section>
+			<ol className="attractions-list">
+				{attractions.map((attraction, index) => (
+					<li key={index} tabIndex="0" onClick={(event => this.handleClick(index))}>
+						{attraction.title}
+					</li>
+				))}
+			</ol>
 			)
 	}
 }

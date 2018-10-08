@@ -9,10 +9,13 @@ class MyMap extends Component {
     this.state = {
       foursquareData: (new Array(this.props.allLocations.length))
     }
+    // media query in JS for map styling
     this.x = window.matchMedia("(min-width: 650px)");
     this.handleState = this.handleState.bind(this);
+    // setting context for 'this' to class
     this.getTip = this.getTip.bind(this);
     this.getPhoto = this.getPhoto.bind(this);
+    this.gm_authFailure = this.gm_authFailure.bind(this);
   }
 
   handleState(index, title, photo, tip) {
@@ -22,15 +25,17 @@ class MyMap extends Component {
     })
   }
 
+  gm_authFailure(){
+    this.props.mapError();
+  }
+
   getTip(title){
     for(const entry of this.state.foursquareData){
-      if(entry){
-        if(entry.title === title){
-          return entry.tip;
-        }
+      if(entry && entry.title === title){
+        return entry.tip;
       }
       else {
-        return 'sorry something went wrong...';
+        return 'Sorry something went wrong with Foursquare API...';
       }
     }
   }
@@ -39,7 +44,7 @@ class MyMap extends Component {
     for(const entry of this.state.foursquareData){
       if(entry){
         if(entry.title === title){
-          return entry.photo;
+          return entry.bestPhoto;
         }
       }
       else {
@@ -57,6 +62,9 @@ class MyMap extends Component {
   }
 
   componentDidMount(){
+    // Google Maps API error handling registration
+    window.gm_authFailure = this.gm_authFailure;
+    // Foursquare data fetch
     const CLIENT_ID = 'T1SIPR5QIKMB0QII1WSUCSIG4EF2CTYTVSNZ3SPOUOVK4VMD';
     const CLIENT_SECRET = 'LZ24XCHKRVDAOSS4RSEBF0EVDV1XDHGKO0WHZXHSACLD0WFI';
     let seq = Promise.resolve();
@@ -76,7 +84,7 @@ class MyMap extends Component {
         })
         .catch((e) => {
             console.log(e);
-            this.handleState(index, location.title, false, 'sorry something went wrong...');
+            this.handleState(index, location.title, false, 'Sorry something went wrong with Foursquare API...');
         });
       });
     });
@@ -84,7 +92,7 @@ class MyMap extends Component {
   }
 
   render() {
-    const {zoom, center, mapClicked, visibleLocations, markerClick, refs, activeMarker, showingInfoWindow, closeInfoWindow, selectedPlace} = this.props;
+    const {zoom, center, mapClicked, visibleLocations, markerClick, refs, activeMarker, showingInfoWindow, closeInfoWindow, selectedPlace, mapLoaded} = this.props;
     const bounds = this.mapBounds();
     // const center = bounds.getCenter();
     const wMap = this.x.matches ? '70%' : '98%';
@@ -94,7 +102,8 @@ class MyMap extends Component {
       height: '87vh'
     }
     return (
-      <div className="mapDiv">
+      <div className="mapDiv">{
+        !mapLoaded ? "Sorry something went wrong with Google Maps API" :
         <Map
           google={this.props.google}
           zoom={zoom}
@@ -106,12 +115,11 @@ class MyMap extends Component {
 
           {visibleLocations.map((location, index) => (
             <Marker
-                name={'Current location'}
                 title={location.title}
                 position={location.location}
                 key={index}
+                icon={(showingInfoWindow && selectedPlace.title === location.title)? 'http://maps.google.com/mapfiles/ms/icons/blue.png' : undefined}
                 onClick={markerClick}
-                animation={this.props.google.maps.Animation.DROP}
                 ref={refs[index]}
                 className={"marker"}
                 />
@@ -124,13 +132,14 @@ class MyMap extends Component {
               <div className="infowindow">
                 <h3>{selectedPlace.title}</h3>
                 <div className="attraction-info">
+                  {/* if Foursquare fetch is not complete or fetch failed, load fallback image 'ohno.jpg' */}
                   <img src={this.getPhoto(selectedPlace.title) || ohno} alt={`${selectedPlace.title}`} className="attraction-img"/>
                   <p className="attraction-tip">{this.getTip(selectedPlace.title)}</p>
                 </div>
               </div>
           </InfoWindow>
 
-        </Map>
+        </Map>}
       </div>
     )
   }

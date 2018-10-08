@@ -23,7 +23,7 @@
   margin: auto;
 }
 
-.app-menu {
+.open-sidebar {
   width: 15%;
   display: block;
   margin: auto;
@@ -43,7 +43,7 @@
   transition: 0.3s;
 }
 
-.app-menu:hover {
+.open-sidebar:hover {
   cursor: pointer;
 }
 
@@ -54,6 +54,10 @@
   margin: 5px;
   padding: 0 2px;
   width: calc(100% - 15px);
+}
+
+.attractions-select:focus {
+  outline: #D5D6DCFF;
 }
 
 .attractions-select option {
@@ -72,16 +76,29 @@
 
 .attractions-list li {
   margin: 20px 0;
+  padding: 5px;
 }
 
 .attractions-list li:hover {
   cursor: pointer;
 }
 
+.attractions-list li:focus {
+  outline: none;
+  background-color: #EFF5F5FF;
+  color: #696C6CFF;
+  border-radius: 2px;
+}
+
 .infowindow {
   width: 180px;
-  height: 100px;
+  height: 110px;
   padding: 0;
+  margin: 0;
+}
+
+.infowindow h3 {
+  margin: 6px;
 }
 
 .marker:hover {
@@ -92,14 +109,15 @@
 }
 
 .attraction-img {
-  max-height: 110px;
-  width: 40%;
+  max-height: 100px;
+  width: 35%;
   height: 100%;
 }
 
 .attraction-tip {
-  width: 60%;
+  width: 65%;
   text-align: left;
+  margin: 0;
   padding-left: 10px;
 }
 
@@ -116,7 +134,7 @@
 }
 
 .footer a p{
-  margin-top: 5px;
+  margin-top: 3px;
 }
 
 @media only screen and (min-width: 650px) {
@@ -130,7 +148,7 @@
     width: 100%;
   }
 
-  .app-menu {
+  .open-sidebar {
     display: none;
   }
 
