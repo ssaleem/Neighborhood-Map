@@ -31,8 +31,10 @@ class MyMap extends Component {
 
   getTip(title){
     for(const entry of this.state.foursquareData){
-      if(entry && entry.title === title){
-        return entry.tip;
+      if(entry) {
+        if(entry.title === title){
+          return entry.tip;
+        }
       }
       else {
         return 'Sorry something went wrong with Foursquare API...';
@@ -65,8 +67,8 @@ class MyMap extends Component {
     // Google Maps API error handling registration
     window.gm_authFailure = this.gm_authFailure;
     // Foursquare data fetch
-    const CLIENT_ID = 'T1SIPR5QIKMB0QII1WSUCSIG4EF2CTYTVSNZ3SPOUOVK4VMD';
-    const CLIENT_SECRET = 'LZ24XCHKRVDAOSS4RSEBF0EVDV1XDHGKO0WHZXHSACLD0WFI';
+    const CLIENT_ID = `${process.env.REACT_APP_FS_CLIENT_ID}`;
+    const CLIENT_SECRET = `${process.env.REACT_APP_FS_CLIENT_SECRET}`;
     let seq = Promise.resolve();
     this.props.allLocations.forEach((location,index) => {
       seq = seq.then(() => {
@@ -118,7 +120,7 @@ class MyMap extends Component {
                 title={location.title}
                 position={location.location}
                 key={index}
-                icon={(showingInfoWindow && selectedPlace.title === location.title)? 'http://maps.google.com/mapfiles/ms/icons/blue.png' : undefined}
+                icon={(showingInfoWindow && selectedPlace.title === location.title)? 'https://maps.google.com/mapfiles/ms/icons/blue.png' : undefined}
                 onClick={markerClick}
                 ref={refs[index]}
                 className={"marker"}
@@ -146,5 +148,5 @@ class MyMap extends Component {
 }
 
 export default GoogleApiWrapper({
-  apiKey: 'AIzaSyCAMTYGR5XftpFpKDTIa-v3qMF2DzYlyS0'
+  apiKey: `${process.env.REACT_APP_GM_API_KEY}`
 })(MyMap)

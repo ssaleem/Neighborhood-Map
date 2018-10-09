@@ -56,10 +56,6 @@
   width: calc(100% - 15px);
 }
 
-.attractions-select:focus {
-  outline: #D5D6DCFF;
-}
-
 .attractions-select option {
   overflow: hidden;
   text-overflow:ellipsis;
