@@ -12,7 +12,7 @@ class List extends Component {
 			<ol className="attractions-list">
 				{attractions.map((attraction, index) => (
 					<li key={index} tabIndex="0" onClick={(event => this.handleClick(index))}>
-						{attraction.title}
+						<div><img src={attraction.icon} alt={attraction.category.logo} className="cat-logo"/><span>{attraction.title}</span></div>
 					</li>
 				))}
 			</ol>

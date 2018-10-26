@@ -9,31 +9,27 @@ import MyMap from './components/MyMap'
 
 library.add(faBars, faGithub)
 
+const VENUE_COUNT = 10;
+
 class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      center: {lat: 28.007216, lng: -82.41949},
-      zoom: 11,
-      locations: [
-        {title: 'Busch Gardens',       category: 'Amusement Park', location: {lat: 28.037216, lng: -82.41949}, vid: '4b0586c3f964a5202a6d22e3'},
-        {title: 'Adventure Island',    category: 'Amusement Park', location: {lat: 28.041735, lng: -82.413059}, vid: '4b0586c3f964a520376d22e3'},
-        {title: 'Tampa Museum of Art', category: 'Museum',         location: {lat: 27.949432, lng: -82.462303}, vid: '533d6e8d498e73f51252b9b2'},
-        {title: 'The Florida Museum of Photographic Arts', category: 'Museum', location: {lat: 27.947299, lng: -82.460134}, vid: '4b0586c4f964a5206a6d22e3'},
-        {title: 'Lettuce Lake Park',   category: 'Nature and Outdoor', location: {lat: 28.073871, lng: -82.375376}, vid: '4b455a19f964a520270b26e3'},
-        {title: 'Rowlett Park',        category: 'Nature and Outdoor', location: {lat: 28.026066, lng: -82.431743}, vid: '4cb39435b4b0a35d63c661ce'}
-      ],
-      categories: [ 'Amusement Park', 'Museum', 'Nature and Outdoor'],
-      filteredLocations: [],
+      locations: [],
+      categories: [],
       showingInfoWindow: false,
       activeMarker: {},
       selectedPlace: {},
       menuClicked: false,
-      googleMapLoaded: true
+      googleMapLoaded: true,
+      selectedCategory: 'all'
     };
     // Refs are used to store marker node references in an array and ilink locations in sidebar with markers
     // more on refs => https://reactjs.org/docs/refs-and-the-dom.html
-    this.markerRefs = this.state.locations.map(() => React.createRef());
+    this.markerRefs = [];
+    for(let i = 0; i < VENUE_COUNT; i++){
+      this.markerRefs.push(React.createRef());
+    }
     // setting context for 'this' to class
     this.openInfoWindow = this.openInfoWindow.bind(this);
     this.closeInfoWindow = this.closeInfoWindow.bind(this);
@@ -44,7 +40,38 @@ class App extends Component {
     this.onMapError = this.onMapError.bind(this);
   }
 
+  componentDidMount(){
+    const CLIENT_ID = `${process.env.REACT_APP_FS_CLIENT_ID}`;
+    const CLIENT_SECRET = `${process.env.REACT_APP_FS_CLIENT_SECRET}`;
+
+    fetch(`https://api.foursquare.com/v2/venues/explore?near=Tampa&section&limit=${VENUE_COUNT}&client_id=${CLIENT_ID}&client_secret=${CLIENT_SECRET}&v=20180323`)
+    .then(function(response) {
+          return response.json()
+      })
+    .then((response) => {
+        let fslocations = response.response.groups[0].items;
+        let locs = [];
+        let cats = [];
+        // console.log(fslocations);
+        fslocations.forEach(fsloc => {
+          let loc = {};
+          loc['title'] = fsloc.venue.name;
+          loc['category'] = fsloc.venue.categories[0].name;
+          loc['location'] = {lat: fsloc.venue.location.lat, lng: fsloc.venue.location.lng} ;
+          loc['vid'] = fsloc.venue.id;
+          loc['icon'] = `${fsloc.venue.categories[0].icon.prefix}32${fsloc.venue.categories[0].icon.suffix}`;
+          locs.push(loc);
+          !cats.includes(loc['category']) && cats.push(loc['category']);
+        })
+        this.setState({categories: cats, locations: locs});
+    })
+    .catch((e) => {
+      console.log(e);
+    })
+  }
+
   openInfoWindow(props, marker){
+    console.log(marker);
     this.setState({
       selectedPlace: props,
       activeMarker: marker,
@@ -78,16 +105,9 @@ class App extends Component {
   }
 
   onSelectCategory(category){
-    if(category === 'all'){
-      this.setState({
-        filteredLocations: []
-      })
-    }
-    else {
-      this.setState({
-        filteredLocations: (this.state.locations.filter(location => location.category === category))
-      })
-    }
+    this.setState({
+      selectedCategory: category
+    })
   }
 
   onMenuClicked(){
@@ -103,41 +123,42 @@ class App extends Component {
   }
 
   render() {
+    let visibleLocations = this.state.locations;
+    let category = this.state.selectedCategory;
+    if(category !== 'all'){
+      visibleLocations = this.state.locations.filter(location => location.category === category)
+    }
     return (
       <div className="app">
         <header className="head">
           {/* menu icon available only on smaller screens for responsive design*/}
           <FontAwesomeIcon icon="bars" className="open-sidebar" tabIndex="0" onClick={this.onMenuClicked}/>
-          <h1 className="app-title">Things to Do in Tampa Bay</h1>
+          <h1 className="app-title"><span>Trending</span> in Tampa Bay</h1>
         </header>
 
-        <Sidebar
-          categories={this.state.categories}
-          visibleLocations={this.state.filteredLocations.length === 0 ? this.state.locations : this.state.filteredLocations}
-          selectCategory={this.onSelectCategory}
-          listClick={this.onListClick}
-          classname={this.state.menuClicked ? "sidebar-expanded" : "sidebar"  /* show/hide sidebar */}
-        />
+        <div className="main">
+          <Sidebar
+            categories={this.state.categories}
+            visibleLocations={visibleLocations}
+            selectCategory={this.onSelectCategory}
+            listClick={this.onListClick}
+            classname={this.state.menuClicked ? "sidebar-expanded" : "sidebar"  /* show/hide sidebar */}
+          />
 
-        <MyMap
-          zoom={this.state.zoom}
-          center={this.state.center}
-          mapClicked={this.onMapClicked}
-          visibleLocations={this.state.filteredLocations.length === 0 ? this.state.locations : this.state.filteredLocations}
-          markerClick={this.openInfoWindow}
-          refs={this.markerRefs}
-          activeMarker={this.state.activeMarker}
-          showingInfoWindow={this.state.showingInfoWindow}
-          closeInfoWindow={this.closeInfoWindow}
-          selectedPlace={this.state.selectedPlace}
-          allLocations={this.state.locations}
-          mapLoaded={this.state.googleMapLoaded}
-          mapError={this.onMapError}
-        />
-
-        <footer className="footer">
-          <a href="https://github.com/ssaleem"><p><FontAwesomeIcon icon={["fab", "github"]} /> ssaleem</p></a>
-        </footer>
+          <MyMap
+            mapClicked={this.onMapClicked}
+            visibleLocations={visibleLocations}
+            markerClick={this.openInfoWindow}
+            refs={this.markerRefs}
+            activeMarker={this.state.activeMarker}
+            showingInfoWindow={this.state.showingInfoWindow}
+            closeInfoWindow={this.closeInfoWindow}
+            selectedPlace={this.state.selectedPlace}
+            allLocations={this.state.locations}
+            mapLoaded={this.state.googleMapLoaded}
+            mapError={this.onMapError}
+          />
+        </div>
       </div>
     )
   }

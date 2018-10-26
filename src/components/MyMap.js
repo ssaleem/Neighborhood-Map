@@ -1,26 +1,34 @@
 import React, { Component } from 'react';
 import {Map, InfoWindow, Marker, GoogleApiWrapper} from 'google-maps-react';
+import { library } from '@fortawesome/fontawesome-svg-core'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faLightbulb } from '@fortawesome/free-regular-svg-icons'
 import ohno from '../img/ohno.jpg';
+import starb from '../img/starb.png';
+import starg from '../img/starg.png';
+
+library.add(faLightbulb)
+
+const FSAPIERR = 'Sorry something went wrong with Foursquare API...';
 
 class MyMap extends Component {
 
   constructor(props){
     super(props);
     this.state = {
-      foursquareData: (new Array(this.props.allLocations.length))
+      foursquareData: {}
     }
     // media query in JS for map styling
     this.x = window.matchMedia("(min-width: 650px)");
-    this.handleState = this.handleState.bind(this);
     // setting context for 'this' to class
-    this.getTip = this.getTip.bind(this);
-    this.getPhoto = this.getPhoto.bind(this);
+    this.handleState = this.handleState.bind(this);
+    this.getinfoWindowData = this.getinfoWindowData.bind(this);
     this.gm_authFailure = this.gm_authFailure.bind(this);
   }
 
-  handleState(index, title, photo, tip) {
+  handleState(title, photo, tip) {
     this.setState(prevState => {
-      prevState.foursquareData[index] = {title: title, bestPhoto: photo, tip: tip};
+      prevState.foursquareData[title] = {bestPhoto: photo, tip: tip};
       return { state: prevState}
     })
   }
@@ -29,30 +37,11 @@ class MyMap extends Component {
     this.props.mapError();
   }
 
-  getTip(title){
-    for(const entry of this.state.foursquareData){
-      if(entry) {
-        if(entry.title === title){
-          return entry.tip;
-        }
-      }
-      else {
-        return 'Sorry something went wrong with Foursquare API...';
-      }
+  getinfoWindowData(title, item){
+    if(this.state.foursquareData[title]) {
+      return this.state.foursquareData[title][item];
     }
-  }
-
-  getPhoto(title){
-    for(const entry of this.state.foursquareData){
-      if(entry){
-        if(entry.title === title){
-          return entry.bestPhoto;
-        }
-      }
-      else {
-        return false;
-      }
-    }
+    return false;
   }
 
   mapBounds(){
@@ -63,14 +52,13 @@ class MyMap extends Component {
     return bounds;
   }
 
-  componentDidMount(){
-    // Google Maps API error handling registration
-    window.gm_authFailure = this.gm_authFailure;
+  componentDidUpdate(prevProps){
     // Foursquare data fetch
-    const CLIENT_ID = `${process.env.REACT_APP_FS_CLIENT_ID}`;
+    if(this.props.allLocations.length !== prevProps.allLocations.length){
+      const CLIENT_ID = `${process.env.REACT_APP_FS_CLIENT_ID}`;
     const CLIENT_SECRET = `${process.env.REACT_APP_FS_CLIENT_SECRET}`;
     let seq = Promise.resolve();
-    this.props.allLocations.forEach((location,index) => {
+    this.props.allLocations.forEach((location) => {
       seq = seq.then(() => {
         fetch(`https://api.foursquare.com/v2/venues/${location.vid}?client_id=${CLIENT_ID}&client_secret=${CLIENT_SECRET}&v=20180323`)
         .then(function(response) {
@@ -81,34 +69,39 @@ class MyMap extends Component {
               return Promise.reject('Foursquare Free Account Quota exceeded');
             }
             else {
-              this.handleState(index, location.title, `${response.response.venue.bestPhoto.prefix}300${response.response.venue.bestPhoto.suffix}`, response.response.venue.tips.groups[0].items[0].text);
+              this.handleState(location.title, `${response.response.venue.bestPhoto.prefix}300${response.response.venue.bestPhoto.suffix}`, response.response.venue.tips.groups[0].items[0].text);
             }
         })
         .catch((e) => {
             console.log(e);
-            this.handleState(index, location.title, false, 'Sorry something went wrong with Foursquare API...');
+            this.handleState(location.title, false, 'Sorry something went wrong with Foursquare API...');
         });
       });
     });
+    }
+  }
 
+  componentDidMount(){
+    // Google Maps API error handling registration
+    window.gm_authFailure = this.gm_authFailure;
   }
 
   render() {
-    const {zoom, center, mapClicked, visibleLocations, markerClick, refs, activeMarker, showingInfoWindow, closeInfoWindow, selectedPlace, mapLoaded} = this.props;
+    const {mapClicked, visibleLocations, markerClick, refs, activeMarker, showingInfoWindow, closeInfoWindow, selectedPlace, mapLoaded} = this.props;
     const bounds = this.mapBounds();
-    // const center = bounds.getCenter();
-    const wMap = this.x.matches ? '70%' : '98%';
+    const center = bounds.getCenter();
+    const wMap = this.x.matches ? '70%' : '100%';
     const styleMap = {
-      position: 'relative',
+      position: 'absolute',
       width: wMap,
-      height: '87vh'
+      height: '90vh'
     }
     return (
       <div className="mapDiv">{
         !mapLoaded ? "Sorry something went wrong with Google Maps API" :
         <Map
           google={this.props.google}
-          zoom={zoom}
+          zoom={11}
           initialCenter={center}
           bounds={bounds}
           onClick={mapClicked}
@@ -120,7 +113,8 @@ class MyMap extends Component {
                 title={location.title}
                 position={location.location}
                 key={index}
-                icon={(showingInfoWindow && selectedPlace.title === location.title)? 'https://maps.google.com/mapfiles/ms/icons/blue.png' : undefined}
+                animation={(showingInfoWindow && selectedPlace.title === location.title)? this.props.google.maps.Animation.BOUNCE : null}
+                icon={(showingInfoWindow && selectedPlace.title === location.title)? starb : starg}
                 onClick={markerClick}
                 ref={refs[index]}
                 className={"marker"}
@@ -135,8 +129,8 @@ class MyMap extends Component {
                 <h3>{selectedPlace.title}</h3>
                 <div className="attraction-info">
                   {/* if Foursquare fetch is not complete or fetch failed, load fallback image 'ohno.jpg' */}
-                  <img src={this.getPhoto(selectedPlace.title) || ohno} alt={`${selectedPlace.title}`} className="attraction-img"/>
-                  <p className="attraction-tip">{this.getTip(selectedPlace.title)}</p>
+                  <img src={this.getinfoWindowData(selectedPlace.title, 'bestPhoto') || ohno} alt={`${selectedPlace.title}`} className="attraction-img"/>
+                  <p className="attraction-tip"><FontAwesomeIcon icon={["far","lightbulb"]} className="bulb-logo"/>  {this.getinfoWindowData(selectedPlace.title, 'tip') || FSAPIERR}</p>
                 </div>
               </div>
           </InfoWindow>
