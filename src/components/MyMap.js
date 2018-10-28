@@ -53,7 +53,7 @@ class MyMap extends Component {
   }
 
   componentDidUpdate(prevProps){
-    // Foursquare data fetch
+    //Foursquare data fetch
     if(this.props.allLocations.length !== prevProps.allLocations.length){
       const CLIENT_ID = `${process.env.REACT_APP_FS_CLIENT_ID}`;
     const CLIENT_SECRET = `${process.env.REACT_APP_FS_CLIENT_SECRET}`;
@@ -69,6 +69,7 @@ class MyMap extends Component {
               return Promise.reject('Foursquare Free Account Quota exceeded');
             }
             else {
+              // console.log(response);
               this.handleState(location.title, `${response.response.venue.bestPhoto.prefix}300${response.response.venue.bestPhoto.suffix}`, response.response.venue.tips.groups[0].items[0].text);
             }
         })
@@ -107,13 +108,12 @@ class MyMap extends Component {
           onClick={mapClicked}
           style={styleMap}
           mapTypeControl={false}>
-
+          {/*animation={(showingInfoWindow && selectedPlace.title === location.title)? this.props.google.maps.Animation.BOUNCE : null}*/}
           {visibleLocations.map((location, index) => (
             <Marker
                 title={location.title}
                 position={location.location}
                 key={index}
-                animation={(showingInfoWindow && selectedPlace.title === location.title)? this.props.google.maps.Animation.BOUNCE : null}
                 icon={(showingInfoWindow && selectedPlace.title === location.title)? starb : starg}
                 onClick={markerClick}
                 ref={refs[index]}

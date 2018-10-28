@@ -1,13 +1,13 @@
 import React, { Component } from 'react';
 import { library } from '@fortawesome/fontawesome-svg-core'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faBars } from '@fortawesome/free-solid-svg-icons'
+import { faList } from '@fortawesome/free-solid-svg-icons'
 import { faGithub } from '@fortawesome/free-brands-svg-icons'
 import './App.css';
 import Sidebar from './components/Sidebar'
 import MyMap from './components/MyMap'
 
-library.add(faBars, faGithub)
+library.add(faList, faGithub)
 
 const VENUE_COUNT = 10;
 
@@ -44,7 +44,7 @@ class App extends Component {
     const CLIENT_ID = `${process.env.REACT_APP_FS_CLIENT_ID}`;
     const CLIENT_SECRET = `${process.env.REACT_APP_FS_CLIENT_SECRET}`;
 
-    fetch(`https://api.foursquare.com/v2/venues/explore?near=Tampa&section&limit=${VENUE_COUNT}&client_id=${CLIENT_ID}&client_secret=${CLIENT_SECRET}&v=20180323`)
+    fetch(`https://api.foursquare.com/v2/venues/explore?near=Tampa&section=trending&limit=${VENUE_COUNT}&client_id=${CLIENT_ID}&client_secret=${CLIENT_SECRET}&v=20180323`)
     .then(function(response) {
           return response.json()
       })
@@ -60,6 +60,7 @@ class App extends Component {
           loc['location'] = {lat: fsloc.venue.location.lat, lng: fsloc.venue.location.lng} ;
           loc['vid'] = fsloc.venue.id;
           loc['icon'] = `${fsloc.venue.categories[0].icon.prefix}32${fsloc.venue.categories[0].icon.suffix}`;
+          loc['address'] = `${fsloc.venue.location.address}, ${fsloc.venue.location.formattedAddress[1]}`;
           locs.push(loc);
           !cats.includes(loc['category']) && cats.push(loc['category']);
         })
@@ -71,7 +72,7 @@ class App extends Component {
   }
 
   openInfoWindow(props, marker){
-    console.log(marker);
+    // console.log(marker);
     this.setState({
       selectedPlace: props,
       activeMarker: marker,
@@ -82,7 +83,8 @@ class App extends Component {
   closeInfoWindow(){
     this.setState({
       showingInfoWindow: false,
-      activeMarker: null
+      activeMarker: null,
+      selectedPlace: {}
     })
   }
 
@@ -90,13 +92,13 @@ class App extends Component {
   //indexes in filtered list of location correspond to indexs in markerRefs array
   onListClick(index){
     this.state.googleMapLoaded && this.openInfoWindow(this.markerRefs[index].current.props, this.markerRefs[index].current.marker);
-    this.setState({
-      menuClicked: false
-    })
+    // this.setState({
+    //   menuClicked: false
+    // })
   }
 
   onMapClicked(){
-    this.state.showingInfoWindow && this.closeInfoWindow();
+    // this.state.showingInfoWindow && this.closeInfoWindow();
     if(this.state.menuClicked){
       this.setState({
         menuClicked: false
@@ -132,7 +134,7 @@ class App extends Component {
       <div className="app">
         <header className="head">
           {/* menu icon available only on smaller screens for responsive design*/}
-          <FontAwesomeIcon icon="bars" className="open-sidebar" tabIndex="0" onClick={this.onMenuClicked}/>
+          <FontAwesomeIcon icon="list" className="open-sidebar" tabIndex="0" onClick={this.onMenuClicked}/>
           <h1 className="app-title"><span>Trending</span> in Tampa Bay</h1>
         </header>
 
@@ -143,6 +145,7 @@ class App extends Component {
             selectCategory={this.onSelectCategory}
             listClick={this.onListClick}
             classname={this.state.menuClicked ? "sidebar-expanded" : "sidebar"  /* show/hide sidebar */}
+            selectedPlace={this.state.selectedPlace}
           />
 
           <MyMap
