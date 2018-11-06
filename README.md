@@ -24,4 +24,4 @@ To see service worker in action
 * Navigate to `http://localhost:5000/`
 
 ## Live Version
-The live version of this app can be explored [here](https://ssaleem.github.io/Neighborhood-Map).
+The live version of this app can be explored [here](https://ssaleem.github.io/Trending-in-Tampa-Bay).
