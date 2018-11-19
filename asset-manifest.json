@@ -1,6 +1,13 @@
 {
-  "main.css": "static/css/main.34e7ad0f.css",
-  "main.css.map": "static/css/main.34e7ad0f.css.map",
-  "main.js": "static/js/main.fbd7aec0.js",
-  "main.js.map": "static/js/main.fbd7aec0.js.map"
+  "main.css": "/Trending-in-Tampa-Bay/static/css/main.b8195176.chunk.css",
+  "main.js": "/Trending-in-Tampa-Bay/static/js/main.194b4403.chunk.js",
+  "main.js.map": "/Trending-in-Tampa-Bay/static/js/main.194b4403.chunk.js.map",
+  "static/js/1.01150ab0.chunk.js": "/Trending-in-Tampa-Bay/static/js/1.01150ab0.chunk.js",
+  "static/js/1.01150ab0.chunk.js.map": "/Trending-in-Tampa-Bay/static/js/1.01150ab0.chunk.js.map",
+  "runtime~main.js": "/Trending-in-Tampa-Bay/static/js/runtime~main.544c83dc.js",
+  "runtime~main.js.map": "/Trending-in-Tampa-Bay/static/js/runtime~main.544c83dc.js.map",
+  "static/css/main.b8195176.chunk.css.map": "/Trending-in-Tampa-Bay/static/css/main.b8195176.chunk.css.map",
+  "index.html": "/Trending-in-Tampa-Bay/index.html",
+  "precache-manifest.81bab87aa76c4857f03191a2888ae6a0.js": "/Trending-in-Tampa-Bay/precache-manifest.81bab87aa76c4857f03191a2888ae6a0.js",
+  "service-worker.js": "/Trending-in-Tampa-Bay/service-worker.js"
 }
