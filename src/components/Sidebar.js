@@ -18,7 +18,7 @@ class Sidebar extends Component {
     }
 
 	render(){
-		const {categories, visibleLocations, selectCategory, listClick, classname} = this.props
+		const {categories, visibleLocations, selectCategory, listClick, classname, selectedPlace} = this.props
 		return(
 			<div className={classname}>
 	          <select name="categories" className="attractions-select" onChange={event => selectCategory(event.target.value)}>
@@ -30,6 +30,7 @@ class Sidebar extends Component {
 	            ))}
 	          </select>
 	          <List
+	          	selectedPlace={selectedPlace}
 	            attractions={visibleLocations}
 	            listClick={(index) => listClick(index)}
 	          />
