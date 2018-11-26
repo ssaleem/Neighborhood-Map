@@ -16,7 +16,7 @@ self.__precacheManifest = [
     "url": "/Trending-in-Tampa-Bay/static/css/main.c3070049.chunk.css"
   },
   {
-    "revision": "d1fabbadffd62609f53d3d227eb92242",
+    "revision": "655fdcf19f1174e21dab5a63625d9a26",
     "url": "/Trending-in-Tampa-Bay/index.html"
   }
 ];

@@ -14,7 +14,7 @@
 importScripts("https://storage.googleapis.com/workbox-cdn/releases/3.6.3/workbox-sw.js");
 
 importScripts(
-  "/Trending-in-Tampa-Bay/precache-manifest.99f05ff524f61a65a1cadfcbe6293361.js"
+  "/Trending-in-Tampa-Bay/precache-manifest.f38555c26bb6bd3fa107a8c4b4432bde.js"
 );
 
 workbox.clientsClaim();
