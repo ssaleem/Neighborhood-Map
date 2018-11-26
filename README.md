@@ -1,12 +1,40 @@
 # Trending in Tampa Bay
-A Google Maps web application displaying Tampa Bay's top trending places. The site gives a sidebar with a list of the places that can be filtered based on their category. The location markers on map, when clicked, open an info window giving additional information about their respective places including top photo and top tip shared by visitors. The service worker offering offline-first experience is implemented in the production build.
+A responsive Google Maps web application displaying top trending places at Foursquare in Tampa Bay area. The site also lists the places in a sidebar with the option to select/filter based on their type/catgeory.
 
-_Foursquare API free account has limited quota for requests made in 24 hours time period, because of that Infowindow data may not be available if site is visited  multiple times_
-
-## Responsive Design
-The site is mobile-first and fully responsive. The sidebar listing all the places is hidden on smaller screens and a hamburger icon can be clicked to show or hide sidebar.
+## Contents
+- [Features](#features)
+- [Built with](#built-with)
+- [Live Version](#live-version)
 
 ![Layout across different screens](responsive.png)
+
+## Features
+
+### UI Features 
+- A map is loaded using the Google Maps API and displays map markers identifying top 10 trending places at Foursquare in Tampa Bay area. The app displays those locations by default when the page is loaded.
+- A list view of the set of locations fetched from Foursquare is implemented.
+- A dropdown filter option is implemented to filter both the list view and the map markers displayed by default on load. The list view and the markers update accordingly in real time.
+- Selecting a location via list item or map marker causes the map marker to change its icon appearance. This indicates that the location has been selected, and an associated info window opens above the map marker with additional information feteched from Foursquare API.
+
+![infowindow showing tip and photo](selectVenue.png)
+
+### Responsive Design
+The site is mobile-first and fully responsive. The sidebar listing all the places is hidden on smaller screens and a hamburger icon can be clicked to show or hide sidebar.
+
+![responsive sidebar](responsive-list.png)
+
+### Asynchronicity and Error Handling
+All data from Google Maps and Foursquare API is loaded asynchronously, and errors are handled gracefully.
+- For Google Maps API loading errors, a message is displayed that notifies the user that the data cannot be loaded so that there are no negative repercussions to the UI.
+
+![Google Map loading failed](gmapErr.png)
+
+- The venue details displayed in marker info window, i.e, top photo and top tip submitted by users, are fetched through premium Foursqaure API calls. Foursqaure API Sandbox account allows only 50 premium calls per 24 hour period. This may result in `Foursquare Free Account Quota exceeded` error from Foursqaure API if the site is visited repeatedly on a day. To handle this error, a fallback photo and error notification is displayed in marker info window.
+
+![Fallback data in info window](fallbackinfowindow.png)
+
+### Offline-first
+- This project is bootstrapped with [Create React App](https://github.com/facebookincubator/create-react-app) which comes with a service worker and is used to serve assets from local cache. The service worker offering offline-first experience is enabled in the production build.
 
 ## Built with
 - [React](https://reactjs.org/) - A JavaScript library for building user interfaces.
@@ -21,7 +49,9 @@ The site is mobile-first and fully responsive. The sidebar listing all the place
 ## Live Version
 The live version of this app can be explored [here](https://ssaleem.github.io/Trending-in-Tampa-Bay).
 
-## How to run locally
+_Foursquare API free/Sandbox account has limited quota for requests made per 24 hours period, because of that Infowindow data may not be available if site is visited  multiple times_
+
+<!-- ## How to run locally
 To test the project without service worker.
 - Install all project dependencies with `npm install`
 - Start the application server with `npm start`
@@ -29,6 +59,6 @@ To test the project without service worker.
 To see service worker in action
 - Run `npm run build`
 - Run `serve -s build`
-- Navigate to `http://localhost:5000/`
+- Navigate to `http://localhost:5000/` -->
 
 
