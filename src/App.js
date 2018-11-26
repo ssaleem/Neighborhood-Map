@@ -2,13 +2,13 @@ import React, { Component } from 'react';
 import { library } from '@fortawesome/fontawesome-svg-core'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faList } from '@fortawesome/free-solid-svg-icons'
-import { faGithub } from '@fortawesome/free-brands-svg-icons'
+// import { faGithub } from '@fortawesome/free-brands-svg-icons'
 import './App.css';
 import Sidebar from './components/Sidebar'
 import MyMap from './components/MyMap'
 
-library.add(faList, faGithub)
-
+// library.add(faList, faGithub)
+library.add(faList)
 const VENUE_COUNT = 10;
 
 class App extends Component {
@@ -24,7 +24,7 @@ class App extends Component {
       googleMapLoaded: true,
       selectedCategory: 'all'
     };
-    // Refs are used to store marker node references in an array and ilink locations in sidebar with markers
+    // Refs are used to store marker node references in an array and to link locations in sidebar with markers
     // more on refs => https://reactjs.org/docs/refs-and-the-dom.html
     this.markerRefs = [];
     for(let i = 0; i < VENUE_COUNT; i++){
@@ -92,9 +92,6 @@ class App extends Component {
   //indexes in filtered list of location correspond to indexs in markerRefs array
   onListClick(index){
     this.state.googleMapLoaded && this.openInfoWindow(this.markerRefs[index].current.props, this.markerRefs[index].current.marker);
-    // this.setState({
-    //   menuClicked: false
-    // })
   }
 
   onMapClicked(){

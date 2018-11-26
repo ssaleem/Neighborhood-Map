@@ -56,29 +56,29 @@ class MyMap extends Component {
     //Foursquare data fetch
     if(this.props.allLocations.length !== prevProps.allLocations.length){
       const CLIENT_ID = `${process.env.REACT_APP_FS_CLIENT_ID}`;
-    const CLIENT_SECRET = `${process.env.REACT_APP_FS_CLIENT_SECRET}`;
-    let seq = Promise.resolve();
-    this.props.allLocations.forEach((location) => {
-      seq = seq.then(() => {
-        fetch(`https://api.foursquare.com/v2/venues/${location.vid}?client_id=${CLIENT_ID}&client_secret=${CLIENT_SECRET}&v=20180323`)
-        .then(function(response) {
-            return response.json()
-        })
-        .then((response) => {
-            if(response.meta.code === 429) {
-              return Promise.reject('Foursquare Free Account Quota exceeded');
-            }
-            else {
-              // console.log(response);
-              this.handleState(location.title, `${response.response.venue.bestPhoto.prefix}300${response.response.venue.bestPhoto.suffix}`, response.response.venue.tips.groups[0].items[0].text);
-            }
-        })
-        .catch((e) => {
-            console.log(e);
-            this.handleState(location.title, false, 'Sorry something went wrong with Foursquare API...');
+      const CLIENT_SECRET = `${process.env.REACT_APP_FS_CLIENT_SECRET}`;
+      let seq = Promise.resolve();
+      this.props.allLocations.forEach((location) => {
+        seq = seq.then(() => {
+          fetch(`https://api.foursquare.com/v2/venues/${location.vid}?client_id=${CLIENT_ID}&client_secret=${CLIENT_SECRET}&v=20180323`)
+          .then(function(response) {
+              return response.json()
+          })
+          .then((response) => {
+              if(response.meta.code === 429) {
+                return Promise.reject('Foursquare Free Account Quota exceeded');
+              }
+              else {
+                // console.log(response);
+                this.handleState(location.title, `${response.response.venue.bestPhoto.prefix}300${response.response.venue.bestPhoto.suffix}`, response.response.venue.tips.groups[0].items[0].text);
+              }
+          })
+          .catch((e) => {
+              console.log(e);
+              this.handleState(location.title, false, 'Sorry something went wrong with Foursquare API...');
+          });
         });
       });
-    });
     }
   }
 
@@ -99,7 +99,7 @@ class MyMap extends Component {
     }
     return (
       <div className="mapDiv">{
-        !mapLoaded ? "Sorry something went wrong with Google Maps API" :
+        !mapLoaded ? <p className="gmap-fail">Ideally, you should see a map here!!! <br/>No map??? :( Sorry something went wrong with Google Maps API</p> :
         <Map
           google={this.props.google}
           zoom={11}
