@@ -87,6 +87,9 @@
 .attractions-list li {
   margin: 8px 0;
   padding: 5px;
+  border-width: 0;
+  transition: border-width 0.8s linear;
+
 }
 
 .attractions-list li:hover {
@@ -95,14 +98,55 @@
 
 .attractions-list li:focus {
   outline: none;
-  border: #EFF5F5FF solid 4px;
-  border-radius: 2px;
+  border: #EFF5F5FF solid 2px;
+  border-radius: 4px;
+  transition: border-width 0.8s linear;
 }
 
 
 .cat-logo {
   vertical-align: middle;
   height: 0.9em;
+}
+
+@-webkit-keyframes fadeIn {
+    from { opacity: 0; }
+      to { opacity: 1; }
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+      to { opacity: 1; }
+}
+
+@-webkit-keyframes fadeOut {
+    from { opacity: 1; }
+      to { opacity: 0; }
+}
+
+@keyframes fadeOut {
+    from { opacity: 1; }
+      to { opacity: 0; }
+}
+
+.address-hide{
+  font-size: calc(12px + 0.1vw);
+  padding-left: 1em;
+  padding-top: 0.4em;
+  margin: 0;
+  -webkit-animation: fadeOut 1.25s;
+  animation: fadeOut 1.25s;
+  display: none;
+}
+
+.address-show{
+  font-size: calc(12px + 0.1vw);
+  padding-left: 1em;
+  padding-top: 0.4em;
+  margin: 0;
+  display: block;
+  -webkit-animation: fadeIn 1.25s;
+  animation: fadeIn 1.25s;
 }
 
 .infowindow {
