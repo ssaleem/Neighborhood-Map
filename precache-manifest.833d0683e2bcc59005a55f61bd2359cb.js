@@ -4,19 +4,19 @@ self.__precacheManifest = [
     "url": "/Trending-in-Tampa-Bay/static/js/runtime~main.544c83dc.js"
   },
   {
-    "revision": "6866f7b87b07a352e9ad",
-    "url": "/Trending-in-Tampa-Bay/static/js/main.6866f7b8.chunk.js"
+    "revision": "94ef5a4a847afa82bb0e",
+    "url": "/Trending-in-Tampa-Bay/static/js/main.94ef5a4a.chunk.js"
   },
   {
     "revision": "60045923c8f854679066",
     "url": "/Trending-in-Tampa-Bay/static/js/1.60045923.chunk.js"
   },
   {
-    "revision": "6866f7b87b07a352e9ad",
-    "url": "/Trending-in-Tampa-Bay/static/css/main.dc65a8ec.chunk.css"
+    "revision": "94ef5a4a847afa82bb0e",
+    "url": "/Trending-in-Tampa-Bay/static/css/main.8c94b998.chunk.css"
   },
   {
-    "revision": "7275b98f32d57cb75ed82dffa1bcda8d",
+    "revision": "d5ac465112652513fff32ce5382f65d4",
     "url": "/Trending-in-Tampa-Bay/index.html"
   }
 ];
