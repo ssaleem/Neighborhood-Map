@@ -155,12 +155,13 @@ class App extends Component {
             markerClick={this.openInfoWindow}
             refs={this.markerRefs}
             activeMarker={this.state.activeMarker}
-            showingInfoWindow={this.state.showingInfoWindow}
+            showingInfoWindow={this.state.showingInfoWindow && !this.state.menuClicked /* Dont show infowindow on small devices when sidebar is exapanded*/}
             closeInfoWindow={this.closeInfoWindow}
             selectedPlace={this.state.selectedPlace}
             allLocations={this.state.locations}
             mapLoaded={this.state.googleMapLoaded}
             mapError={this.onMapError}
+            classname={this.state.menuClicked ? "mapDiv-shrinked" : "mapDiv"  /* shrink or expand map */}
           />
         </div>
       </div>

@@ -8,7 +8,7 @@
 
 .head {
   width: 100%;
-  height: 10vh;
+  height: 15vh;
   display: flex;
   font-size: calc(20px + 0.5vw);
   color: #EFF5F5;
@@ -43,6 +43,10 @@
   margin: auto;
 }
 
+.open-sidebar:hover {
+  cursor: pointer;
+}
+
 .sidebar {
   display: none;
   transition: 0.1s;
@@ -51,12 +55,26 @@
 .sidebar-expanded {
   width: 60%;
   background-color: #8aa59e;
-  height: 90vh;
+  height: 85vh;
   transition: 0.3s;
 }
 
-.open-sidebar:hover {
-  cursor: pointer;
+.mapDiv {
+  width: 100%;
+}
+
+.mapDiv-shrinked {
+  width: 40%;
+}
+/*!important is used to override inline styles for create-react-map*/
+.mapDiv > div[style] {
+  width: inherit !important;
+  height: inherit !important;
+}
+
+.mapDiv-shrinked > div[style] {
+  width: inherit !important;
+  height: inherit !important;
 }
 
 .attractions-select {
@@ -194,19 +212,7 @@
 }
 
 .fs-footer {
-  font-size: 10px;
-  position: absolute;
-  bottom: 0;
-  color: #D1D7DCFF;
-  /*left: 0;*/
-  width: inherit;
-  padding-bottom: 6px;
-  margin: auto;
-}
-
-.fs-footer p {
-  font-size: 10px;
-  padding:0;
+  display: none;
 }
 
 .fs-logo {
@@ -225,9 +231,19 @@
     font-size: calc(24px + 0.6vw);
   }
 
+  .head {
+    height: 10vh;
+  }
+
   .mapDiv {
     width: 70%;
-  }
+   }
+
+  /*.mapDiv > div[style] {
+    width: inherit !important;
+    height: inherit !important;
+  }*/
+
 
   .open-sidebar {
     display: none;
@@ -255,10 +271,20 @@
 
   .fs-footer {
     font-size: 10px;
+    position: absolute;
+    bottom: 0;
+    color: #D1D7DCFF;
+    /*left: 0;*/
+    width: inherit;
+    padding-bottom: 6px;
+    margin: auto;
     width: 100%;
+    display: block;
   }
 
   .fs-footer p {
+    font-size: 10px;
+    padding:0;
     margin: 0 auto;
   }
 }

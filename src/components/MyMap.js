@@ -19,7 +19,8 @@ class MyMap extends Component {
       foursquareData: {}
     }
     // media query in JS for map styling
-    this.x = window.matchMedia("(min-width: 650px)");
+    // this.x = window.matchMedia("(min-width: 650px)");
+    this.y = window.matchMedia("(min-width: 768px)");
     // setting context for 'this' to class
     this.handleState = this.handleState.bind(this);
     this.getinfoWindowData = this.getinfoWindowData.bind(this);
@@ -91,14 +92,15 @@ class MyMap extends Component {
     const {mapClicked, visibleLocations, markerClick, refs, activeMarker, showingInfoWindow, closeInfoWindow, selectedPlace, mapLoaded} = this.props;
     const bounds = this.mapBounds();
     const center = bounds.getCenter();
-    const wMap = this.x.matches ? '70%' : '100%';
+    // const wMap = this.x.matches ? '100%' : '100%';
+    const yMap = this.y.matches ? '90vh' : '85vh';
     const styleMap = {
       position: 'absolute',
-      width: wMap,
-      height: '90vh'
+      width: '100%',
+      height: yMap
     }
     return (
-      <div className="mapDiv">{
+      <div className={this.props.classname}>{
         !mapLoaded ? <p className="gmap-fail">Ideally, you should see a map here!!! <br/>No map??? :( Sorry something went wrong with Google Maps API</p> :
         <Map
           google={this.props.google}
