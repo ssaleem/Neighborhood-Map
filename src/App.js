@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import ReactGA from 'react-ga';
 import { library } from '@fortawesome/fontawesome-svg-core'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faList } from '@fortawesome/free-solid-svg-icons'
@@ -7,6 +8,9 @@ import './App.css';
 import Sidebar from './components/Sidebar'
 import MyMap from './components/MyMap'
 
+// Google analytics info
+ReactGA.initialize('UA-129370123-4');
+ReactGA.pageview(window.location.pathname + window.location.search);
 // library.add(faList, faGithub)
 library.add(faList)
 const VENUE_COUNT = 10;
