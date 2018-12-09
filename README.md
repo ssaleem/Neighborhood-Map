@@ -19,9 +19,7 @@ A responsive Google Maps web application displaying top trending places at Fours
 ![infowindow showing tip and photo](selectVenue.png)
 
 ### Responsive Design
-The site is mobile-first and fully responsive. The sidebar listing all the places is hidden on smaller screens and a hamburger icon can be clicked to show or hide sidebar.
-
-![responsive sidebar](responsive-list.png)
+The site is mobile-first and fully responsive. Leveraging portrait mode dimensions, the sidebar listing all the places is moved to the bottom of the map on smaller screen devices. Sass is used to keep the styles organized and maintainable.
 
 ### Asynchronicity and Error Handling
 All data from Google Maps and Foursquare API is loaded asynchronously, and errors are handled gracefully.
@@ -42,7 +40,8 @@ All data from Google Maps and Foursquare API is loaded asynchronously, and error
 - [google-maps-react](https://www.npmjs.com/package/google-maps-react) - A declarative Google Map React component built using React.
 - [Foursquare API](https://developer.foursquare.com/docs/api) - Api to incorporate Foursquare venues data as well as Photos, tips, and reviews written by Foursquare users into apps.
 - [prop-types](https://www.npmjs.com/package/prop-types) - Runtime type checking for React props.
-- [Fetch API](https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API) - An interface for fetching resources.
+- [Fetch API](https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API) - A JavaScript interface for asynchronously fetching resources.
+- [SASS](https://sass-lang.com/) - A mature, stable, and powerful professional grade CSS extension language.
 - [CSS Flexbox](https://www.w3schools.com/css/css3_flexbox.asp) - CSS layout module to design flexible responsive layout structure without using float or positioning.
 - [CSS Media Queries](https://www.w3schools.com/css/css3_mediaqueries.asp) - A popular technique to deliver a tailored style sheet to desktops, laptops, tablets, and mobile phones by defining different style rules for different media types.
 
