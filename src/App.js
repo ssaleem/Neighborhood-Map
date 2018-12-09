@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
 import ReactGA from 'react-ga';
-import { library } from '@fortawesome/fontawesome-svg-core'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faList } from '@fortawesome/free-solid-svg-icons'
+// import { library } from '@fortawesome/fontawesome-svg-core'
+// import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+// import { faList } from '@fortawesome/free-solid-svg-icons'
 // import { faGithub } from '@fortawesome/free-brands-svg-icons'
-import './App.css';
+import './App.scss';
 import Sidebar from './components/Sidebar'
 import MyMap from './components/MyMap'
 
@@ -12,7 +12,7 @@ import MyMap from './components/MyMap'
 ReactGA.initialize('UA-129370123-4');
 ReactGA.pageview(window.location.pathname + window.location.search);
 // library.add(faList, faGithub)
-library.add(faList)
+// library.add(faList)
 const VENUE_COUNT = 10;
 
 class App extends Component {
@@ -24,7 +24,7 @@ class App extends Component {
       showingInfoWindow: false,
       activeMarker: {},
       selectedPlace: {},
-      menuClicked: false,
+      // menuClicked: false,
       googleMapLoaded: true,
       selectedCategory: 'all'
     };
@@ -40,7 +40,7 @@ class App extends Component {
     this.onListClick = this.onListClick.bind(this);
     this.onMapClicked = this.onMapClicked.bind(this);
     this.onSelectCategory = this.onSelectCategory.bind(this);
-    this.onMenuClicked = this.onMenuClicked.bind(this);
+    // this.onMenuClicked = this.onMenuClicked.bind(this);
     this.onMapError = this.onMapError.bind(this);
   }
 
@@ -99,23 +99,13 @@ class App extends Component {
   }
 
   onMapClicked(){
-    // this.state.showingInfoWindow && this.closeInfoWindow();
-    if(this.state.menuClicked){
-      this.setState({
-        menuClicked: false
-      })
-    }
+    this.state.showingInfoWindow && this.closeInfoWindow();
   }
 
   onSelectCategory(category){
+    this.state.showingInfoWindow && this.closeInfoWindow();
     this.setState({
       selectedCategory: category
-    })
-  }
-
-  onMenuClicked(){
-    this.setState({
-      menuClicked: (this.state.menuClicked ? false : true)
     })
   }
 
@@ -134,8 +124,6 @@ class App extends Component {
     return (
       <div className="app">
         <header className="head">
-          {/* menu icon available only on smaller screens for responsive design*/}
-          <FontAwesomeIcon icon="list" className="open-sidebar" tabIndex="0" onClick={this.onMenuClicked}/>
           <h1 className="app-title"><span>Trending</span> in Tampa Bay</h1>
         </header>
 
@@ -145,7 +133,6 @@ class App extends Component {
             visibleLocations={visibleLocations}
             selectCategory={this.onSelectCategory}
             listClick={this.onListClick}
-            classname={this.state.menuClicked ? "sidebar-expanded" : "sidebar"  /* show/hide sidebar */}
             selectedPlace={this.state.selectedPlace}
           />
 
@@ -155,14 +142,13 @@ class App extends Component {
             markerClick={this.openInfoWindow}
             refs={this.markerRefs}
             activeMarker={this.state.activeMarker}
-            showingInfoWindow={this.state.showingInfoWindow && !this.state.menuClicked /* Dont show infowindow on small devices when sidebar is exapanded*/}
+            showingInfoWindow={this.state.showingInfoWindow}
             closeInfoWindow={this.closeInfoWindow}
             selectedPlace={this.state.selectedPlace}
             allLocations={this.state.locations}
             mapLoaded={this.state.googleMapLoaded}
-            mapError={this.onMapError}
-            classname={this.state.menuClicked ? "mapDiv-shrinked" : "mapDiv"  /* shrink or expand map */}
-          />
+            mapError={this.onMapError}/>
+
         </div>
       </div>
     )

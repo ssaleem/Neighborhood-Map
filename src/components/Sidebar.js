@@ -14,13 +14,12 @@ class Sidebar extends Component {
         visibleLocations: PropTypes.array.isRequired,
         selectCategory: PropTypes.func.isRequired,
         listClick: PropTypes.func.isRequired,
-        classname: PropTypes.string.isRequired
     }
 
 	render(){
-		const {categories, visibleLocations, selectCategory, listClick, classname, selectedPlace} = this.props
+		const {categories, visibleLocations, selectCategory, listClick, selectedPlace} = this.props
 		return(
-			<div className={classname}>
+			<div className="sidebar">
 	          <select name="categories" className="attractions-select" onChange={event => selectCategory(event.target.value)}>
 	            <option value="all">Select Category</option>
 	            {categories.map((category, index) => (

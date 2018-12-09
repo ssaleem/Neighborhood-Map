@@ -1,0 +1,33 @@
+@import 'variables';
+@import 'breakpoints';
+
+.head {
+  width: 100%;
+  height: $mobile-header-height;
+  max-height: $mobile-max-header-height;
+  display: flex;
+  align-items: center;
+  @media only screen and (min-width: $screen-md-min) {
+  	height: $screen-md-lg-header-height;
+  	max-height: none;
+  }
+}
+
+.app-title {
+  font-size: 1.4em;
+  margin: auto;
+  @media only screen and (min-width: $screen-md-min) {
+  	// parent is now a flex container
+  	width: 100%;
+  	font-size: 2em;
+  }
+}
+
+.app-title span {
+  font-family: 'Bungee Inline', cursive;
+  font-weight: 100;
+  color: $highlight-color;
+  border: $highlight-color dashed 4px;
+  border-radius: 4px;
+  padding: 0.15em;
+}

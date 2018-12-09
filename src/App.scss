@@ -1,0 +1,195 @@
+@import './partials/variables';
+@import './partials/breakpoints';
+@import './partials/header';
+@import './partials/infowindow';
+@import './partials/footer';
+
+* {
+  box-sizing: border-box;
+}
+
+.app {
+  text-align: center;
+  height: 100vh;
+  background-color: $primary-background-color;
+  color: $primary-font-color;
+  font-family: 'Open Sans', sans-serif;
+  font-weight: normal;
+}
+
+.main {
+  width: 100%;
+  display: flex;
+  flex-direction: column-reverse;
+  height: calc(100vh - #{$mobile-header-height});
+}
+
+.sidebar {
+  width: 100%;
+  overflow-y: auto;
+  flex: 1;
+}
+
+.mapDiv {
+  width: 100%;
+  height: $mobile-map-height;
+}
+
+/*!important is used to override inline styles for google-maps-react*/
+.mapDiv > div[style] {
+  width: inherit !important;
+  height: inherit !important;
+}
+
+.attractions-select {
+  background-color: white;
+  border: 1px solid #fff;
+  font-size: 1.1em;
+  margin: 5px;
+  padding: 0 2px;
+  width: calc(100% - 15px);
+  outline-color: $highlight-color;
+}
+
+.attractions-select option {
+  overflow: hidden;
+  text-overflow:ellipsis;
+  color: green;
+}
+
+.attractions-list {
+  list-style: outside none none;
+  text-align: left;
+  font-size: 1.1em;
+  margin: 0;
+  padding: 8px;
+}
+
+.attractions-list li {
+  margin: 8px 0;
+  padding: 5px;
+  border-width: 0;
+  font-size: 0.9em;
+  transition: border-width 0.8s linear;
+
+}
+
+.attractions-list li:hover {
+  cursor: pointer;
+}
+
+.attractions-list li:focus {
+  outline: none;
+  border: $primary-font-color solid 2px;
+  border-radius: 4px;
+  transition: border-width 0.8s linear;
+}
+
+
+.cat-logo {
+  vertical-align: middle;
+  padding: 0;
+  padding-right: 0.2em;
+}
+
+@-webkit-keyframes fadeIn {
+    from { opacity: 0; }
+      to { opacity: 1; }
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+      to { opacity: 1; }
+}
+
+@-webkit-keyframes fadeOut {
+    from { opacity: 1; }
+      to { opacity: 0; }
+}
+
+@keyframes fadeOut {
+    from { opacity: 1; }
+      to { opacity: 0; }
+}
+
+.address-hide{
+  font-size: 0.75em;
+  padding-left: 1.2em;
+  padding-top: 0.4em;
+  margin: 0;
+  -webkit-animation: fadeOut 1.25s;
+  animation: fadeOut 1.25s;
+  display: none;
+}
+
+.address-show{
+  font-size: 0.75em;
+  padding-left: 1.2em;
+  padding-top: 0.4em;
+  margin: 0;
+  display: block;
+  -webkit-animation: fadeIn 1.25s;
+  animation: fadeIn 1.25s;
+}
+
+.marker:hover {
+  cursor: pointer;
+}
+
+.gmap-fail {
+  text-align: justify;
+  padding: 3em;
+}
+
+@media only screen and (min-width: $screen-md-min) {
+
+  .app {
+    display: flex;
+    flex-wrap: wrap;
+  }
+
+  .main {
+    flex-direction: row;
+    height: calc(100vh - #{$screen-md-lg-header-height});
+  }
+
+  .mapDiv {
+    width: calc(100% - #{$screen-md-sidebar-width});
+    // an extra div added by google-maps-react so explicitly set height and do not inherit
+    height: calc(100vh - #{$screen-md-lg-header-height});;
+   }
+
+  .sidebar {
+    width: $screen-md-sidebar-width;
+    height: inherit;
+    flex: 0 1 auto;
+    display: block;
+    position: relative;
+  }
+
+  .attractions-list li {
+    font-size: 1em;
+  }
+
+  .cat-logo {
+    height: 1.4em;
+    vertical-align: middle;
+  }
+
+  .address-hide, .address-show {
+    padding-left: 1.6em;
+  }
+}
+
+
+@media only screen and (min-width: $screen-lg-min) {
+  .sidebar {
+    width: $screen-lg-sidebar-width;
+  }
+
+  .mapDiv {
+    width: calc(100% - #{$screen-lg-sidebar-width});
+  }
+}
+
+
