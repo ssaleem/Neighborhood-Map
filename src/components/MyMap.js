@@ -3,13 +3,10 @@ import {Map, InfoWindow, Marker, GoogleApiWrapper} from 'google-maps-react';
 import { library } from '@fortawesome/fontawesome-svg-core'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faLightbulb } from '@fortawesome/free-regular-svg-icons'
-import ohno from '../img/ohno.jpg';
-import starb from '../img/starb.png';
-import starg from '../img/starg.png';
 
 library.add(faLightbulb)
 
-const FSAPIERR = 'Sorry something went wrong with Foursquare API...';
+const FS_API_ERR_FALLBACK = 'Sorry something went wrong with Foursquare API...';
 
 class MyMap extends Component {
 
@@ -115,7 +112,7 @@ class MyMap extends Component {
                 title={location.title}
                 position={location.location}
                 key={index}
-                icon={(showingInfoWindow && selectedPlace.title === location.title)? starb : starg}
+                icon={(showingInfoWindow && selectedPlace.title === location.title)? './img/starb.png' : './img/starg.png'}
                 onClick={markerClick}
                 ref={refs[index]}
                 className={"marker"}
@@ -130,8 +127,8 @@ class MyMap extends Component {
                 <h3>{selectedPlace.title}</h3>
                 <div className="attraction-info">
                   {/* if Foursquare fetch is not complete or fetch failed, load fallback image 'ohno.jpg' */}
-                  <img src={this.getinfoWindowData(selectedPlace.title, 'bestPhoto') || ohno} alt={`${selectedPlace.title}`} className="attraction-img"/>
-                  <p className="attraction-tip"><FontAwesomeIcon icon={["far","lightbulb"]} className="bulb-logo"/>  {this.getinfoWindowData(selectedPlace.title, 'tip') || FSAPIERR}</p>
+                  <img src={this.getinfoWindowData(selectedPlace.title, 'bestPhoto') || './img/ohno.jpg'} alt={`${selectedPlace.title}`} className="attraction-img"/>
+                  <p className="attraction-tip"><FontAwesomeIcon icon={["far","lightbulb"]} className="bulb-logo"/>  {this.getinfoWindowData(selectedPlace.title, 'tip') || FS_API_ERR_FALLBACK}</p>
                 </div>
               </div>
           </InfoWindow>
