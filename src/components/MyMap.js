@@ -17,10 +17,11 @@ class MyMap extends Component {
     }
     // media query in JS for map styling
     this.x = window.matchMedia("(min-width: 768px)");
-    // setting context for 'this' to class
+    // setting context for 'this' inside methods to MyMap class
     this.handleState = this.handleState.bind(this);
     this.getinfoWindowData = this.getinfoWindowData.bind(this);
     this.gm_authFailure = this.gm_authFailure.bind(this);
+    this.onMapClick = this.onMapClick.bind(this);
   }
 
   handleState(title, photo, tip) {
@@ -84,8 +85,13 @@ class MyMap extends Component {
     window.gm_authFailure = this.gm_authFailure;
   }
 
+  // Close infowindow (if one is open) on map click
+  onMapClick(){
+    this.props.showingInfoWindow && this.props.closeInfoWindow();
+  }
+
   render() {
-    const {mapClicked, visibleLocations, markerClick, refs, activeMarker, showingInfoWindow, closeInfoWindow, selectedPlace, mapLoaded} = this.props;
+    const {visibleLocations, markerClick, refs, activeMarker, showingInfoWindow, closeInfoWindow, selectedPlace, mapLoaded} = this.props;
     const bounds = this.mapBounds();
     const center = bounds.getCenter();
     const styleMap = {
@@ -101,7 +107,7 @@ class MyMap extends Component {
           zoom={11}
           initialCenter={center}
           bounds={bounds}
-          onClick={mapClicked}
+          onClick={this.onMapClick}
           style={styleMap}
           mapTypeControl={false}
           streetViewControl={false}

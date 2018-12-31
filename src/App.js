@@ -34,17 +34,17 @@ class App extends Component {
     for(let i = 0; i < VENUE_COUNT; i++){
       this.markerRefs.push(React.createRef());
     }
-    // setting context for 'this' to class
+    // setting context for 'this' inside methods to App class
     this.openInfoWindow = this.openInfoWindow.bind(this);
     this.closeInfoWindow = this.closeInfoWindow.bind(this);
     this.onListClick = this.onListClick.bind(this);
-    this.onMapClicked = this.onMapClicked.bind(this);
     this.onSelectCategory = this.onSelectCategory.bind(this);
-    // this.onMenuClicked = this.onMenuClicked.bind(this);
     this.onMapError = this.onMapError.bind(this);
   }
 
+  //Fetch trending venues list through Foursquare API
   componentDidMount(){
+    //Foursquare API credentials
     const CLIENT_ID = `${process.env.REACT_APP_FS_CLIENT_ID}`;
     const CLIENT_SECRET = `${process.env.REACT_APP_FS_CLIENT_SECRET}`;
 
@@ -98,10 +98,8 @@ class App extends Component {
     this.state.googleMapLoaded && this.openInfoWindow(this.markerRefs[index].current.props, this.markerRefs[index].current.marker);
   }
 
-  onMapClicked(){
-    this.state.showingInfoWindow && this.closeInfoWindow();
-  }
 
+  // When a venue category is selected from drop-down, close any open infowindow and update state
   onSelectCategory(category){
     this.state.showingInfoWindow && this.closeInfoWindow();
     this.setState({
@@ -135,9 +133,7 @@ class App extends Component {
             listClick={this.onListClick}
             selectedPlace={this.state.selectedPlace}
           />
-
           <MyMap
-            mapClicked={this.onMapClicked}
             visibleLocations={visibleLocations}
             markerClick={this.openInfoWindow}
             refs={this.markerRefs}
