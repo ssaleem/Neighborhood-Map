@@ -20,7 +20,7 @@ class Sidebar extends Component {
 		const {categories, visibleLocations, selectCategory, listClick, selectedPlace} = this.props
 		return(
 			<div className="sidebar">
-	          <select name="categories" className="attractions-select" onChange={event => selectCategory(event.target.value)}>
+	          <select name="categories" className="attractions-select" onChange={event => selectCategory(event.target.value)} aria-label="Select Venue Category">
 	            <option value="all">Select Category</option>
 	            {categories.map((category, index) => (
 	              <option value={category} key={index}>
