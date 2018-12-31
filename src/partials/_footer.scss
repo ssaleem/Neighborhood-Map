@@ -2,7 +2,7 @@
 @import 'breakpoints';
 
 
-.fs-footer {
+footer {
   display: none;
   @media only screen and (min-width: $screen-md-min) {
     position: absolute;
@@ -17,7 +17,7 @@
 	}
 }
 
-.fs-footer p {
+footer p {
 	font-size: 10px;
 	padding:0;
 	margin: 0 auto;

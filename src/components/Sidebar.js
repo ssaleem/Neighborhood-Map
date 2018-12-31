@@ -33,12 +33,10 @@ class Sidebar extends Component {
 	            attractions={visibleLocations}
 	            listClick={(index) => listClick(index)}
 	          />
-	          <div className="fs-footer">
+	          <footer>
 		          <p >POWERED BY <a href="https://developer.foursquare.com/"><FontAwesomeIcon icon={["fab", "foursquare"]} className="fs-logo"/></a></p>
-		          <p><FontAwesomeIcon icon="copyright"/> 2018 SARA SALEEM. ALL RIGHTS RESERVED
-		            {/* <a href="https://github.com/ssaleem">  <FontAwesomeIcon icon={["fab", "github"]}/>ssaleem</a>*/}
-		          </p>
-	          </div>
+		          <p><FontAwesomeIcon icon="copyright"/> 2018 SARA SALEEM. ALL RIGHTS RESERVED</p>
+	          </footer>
 	        </div>
 		)
 	}

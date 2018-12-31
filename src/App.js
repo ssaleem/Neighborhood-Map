@@ -1,9 +1,5 @@
 import React, { Component } from 'react';
 import ReactGA from 'react-ga';
-// import { library } from '@fortawesome/fontawesome-svg-core'
-// import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-// import { faList } from '@fortawesome/free-solid-svg-icons'
-// import { faGithub } from '@fortawesome/free-brands-svg-icons'
 import './App.scss';
 import Sidebar from './components/Sidebar'
 import MyMap from './components/MyMap'
@@ -11,8 +7,8 @@ import MyMap from './components/MyMap'
 // Google analytics info
 ReactGA.initialize('UA-129370123-4');
 ReactGA.pageview(window.location.pathname + window.location.search);
-// library.add(faList, faGithub)
-// library.add(faList)
+
+//Maximum number of venues displayed
 const VENUE_COUNT = 10;
 
 class App extends Component {
@@ -24,7 +20,6 @@ class App extends Component {
       showingInfoWindow: false,
       activeMarker: {},
       selectedPlace: {},
-      // menuClicked: false,
       googleMapLoaded: true,
       selectedCategory: 'all'
     };
@@ -49,12 +44,10 @@ class App extends Component {
     const CLIENT_SECRET = `${process.env.REACT_APP_FS_CLIENT_SECRET}`;
 
     fetch(`https://api.foursquare.com/v2/venues/explore?near=Tampa&section=trending&limit=${VENUE_COUNT}&client_id=${CLIENT_ID}&client_secret=${CLIENT_SECRET}&v=20180323`)
-    .then(function(response) {
-          return response.json()
-      })
+    .then((response) => response.json())
     .then((response) => {
         let fslocations = response.response.groups[0].items;
-        let locs = [];
+        let venues = [];
         let cats = [];
         // console.log(fslocations);
         fslocations.forEach(fsloc => {
@@ -65,18 +58,20 @@ class App extends Component {
           loc['vid'] = fsloc.venue.id;
           loc['icon'] = `${fsloc.venue.categories[0].icon.prefix}32${fsloc.venue.categories[0].icon.suffix}`;
           loc['address'] = `${fsloc.venue.location.address}, ${fsloc.venue.location.formattedAddress[1]}`;
-          locs.push(loc);
+          venues.push(loc);
           !cats.includes(loc['category']) && cats.push(loc['category']);
         })
-        this.setState({categories: cats, locations: locs});
+        this.setState({categories: cats, locations: venues});
     })
-    .catch((e) => {
-      console.log(e);
-    })
+    .catch((e) => console.log(e))
+  }
+
+  //Google map is not loaded successfully
+  onMapError(){
+    this.setState({ googleMapLoaded: false })
   }
 
   openInfoWindow(props, marker){
-    // console.log(marker);
     this.setState({
       selectedPlace: props,
       activeMarker: marker,
@@ -102,30 +97,22 @@ class App extends Component {
   // When a venue category is selected from drop-down, close any open infowindow and update state
   onSelectCategory(category){
     this.state.showingInfoWindow && this.closeInfoWindow();
-    this.setState({
-      selectedCategory: category
-    })
+    this.setState({ selectedCategory: category});
   }
 
-  onMapError(){
-    this.setState({
-      googleMapLoaded: false
-    })
-  }
+
 
   render() {
-    let visibleLocations = this.state.locations;
     let category = this.state.selectedCategory;
-    if(category !== 'all'){
-      visibleLocations = this.state.locations.filter(location => location.category === category)
-    }
+    let visibleLocations = (category !== 'all') ? this.state.locations.filter(location => location.category === category) : this.state.locations;
+
     return (
       <div className="app">
-        <header className="head">
+        <header>
           <h1 className="app-title"><span>Trending</span> in Tampa Bay</h1>
         </header>
 
-        <div className="main">
+        <main>
           <Sidebar
             categories={this.state.categories}
             visibleLocations={visibleLocations}
@@ -145,7 +132,7 @@ class App extends Component {
             mapLoaded={this.state.googleMapLoaded}
             mapError={this.onMapError}/>
 
-        </div>
+        </main>
       </div>
     )
   }
