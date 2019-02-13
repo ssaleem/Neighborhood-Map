@@ -1,10 +1,8 @@
 import React, { Component } from 'react';
 import {Map, InfoWindow, Marker, GoogleApiWrapper} from 'google-maps-react';
-import { library } from '@fortawesome/fontawesome-svg-core'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faLightbulb } from '@fortawesome/free-regular-svg-icons'
 
-library.add(faLightbulb)
 
 const FS_API_ERR_FALLBACK = 'Sorry something went wrong with Foursquare API...';
 
@@ -17,17 +15,12 @@ class MyMap extends Component {
     }
     // media query in JS for map styling
     this.x = window.matchMedia("(min-width: 768px)");
-    // setting context for 'this' inside methods to MyMap class
-    this.handleState = this.handleState.bind(this);
-    this.onMapClick = this.onMapClick.bind(this);
   }
 
-  handleState(title, photo, tip) {
-    this.setState(prevState => {
-      prevState.foursquareData[title] = {bestPhoto: photo, tip: tip};
-      return { state: prevState}
+  handleState = (title, photo, tip) => this.setState(prevState => {
+      prevState.foursquareData[title] = { bestPhoto: photo, tip: tip };
+      return { state: prevState }
     })
-  }
 
   componentDidMount(){
     // Google Maps API error handling registration
@@ -36,36 +29,31 @@ class MyMap extends Component {
 
 
   componentDidUpdate(prevProps){
-    //Fetch venue deatils like top photo and top tip from Foursquare
+    // Fetch venue deatils like top photo and top tip from Foursquare
     if(this.props.allLocations.length !== prevProps.allLocations.length){
       //Foursquare API credentials
       const CLIENT_ID = `${process.env.REACT_APP_FS_CLIENT_ID}`;
       const CLIENT_SECRET = `${process.env.REACT_APP_FS_CLIENT_SECRET}`;
-      // let seq = Promise.resolve();
       this.props.allLocations.forEach((location) => {
-        //seq = seq.then(() => {
           fetch(`https://api.foursquare.com/v2/venues/${location.vid}?client_id=${CLIENT_ID}&client_secret=${CLIENT_SECRET}&v=20180323`)
           .then(response => response.json())
-          .then((response) => {
+          .then(response => {
               if(response.meta.code === 429) {
-                return Promise.reject('Foursquare Free Account Quota exceeded');
+                return Promise.reject(new Error('Foursquare Free Account Quota exceeded'));
               }
               else {
                 this.handleState(location.title, `${response.response.venue.bestPhoto.prefix}300${response.response.venue.bestPhoto.suffix}`, response.response.venue.tips.groups[0].items[0].text);
               }
           })
           .catch(e => console.log(e));
-        //});
       });
     }
   }
 
   // Close infowindow (if one is open) on map click
-  onMapClick(){
-    this.props.showingInfoWindow && this.props.closeInfoWindow();
-  }
+  onMapClick = () => this.props.showingInfoWindow && this.props.closeInfoWindow()
 
-  //calculate map bounds based on venues
+  // Calculate map bounds based on venues
   mapBounds(){
     let bounds = new this.props.google.maps.LatLngBounds();
     for (var i = 0; i < this.props.allLocations.length; i++) {
@@ -117,7 +105,7 @@ class MyMap extends Component {
                 <div className="attraction-info">
                   {/* if Foursquare fetch is not complete or fetch failed, load fallback image and fallback text*/}
                   <img src={(this.state.foursquareData[selectedPlace.title] && this.state.foursquareData[selectedPlace.title]['bestPhoto']) || './img/ohno.jpg'} alt={`${selectedPlace.title}`} className="attraction-img"/>
-                  <p className="attraction-tip"><FontAwesomeIcon icon={["far","lightbulb"]} className="bulb-logo"/>  {(this.state.foursquareData[selectedPlace.title] && this.state.foursquareData[selectedPlace.title]['tip']) || FS_API_ERR_FALLBACK}</p>
+                  <p className="attraction-tip"><FontAwesomeIcon icon={faLightbulb} className="bulb-logo"/>  {(this.state.foursquareData[selectedPlace.title] && this.state.foursquareData[selectedPlace.title]['tip']) || FS_API_ERR_FALLBACK}</p>
                 </div>
               </div>
           </InfoWindow>

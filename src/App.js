@@ -8,8 +8,8 @@ import MyMap from './components/MyMap'
 ReactGA.initialize('UA-129370123-4');
 ReactGA.pageview(window.location.pathname + window.location.search);
 
-//Maximum number of venues displayed
-const VENUE_COUNT = 10;
+// Maximum number of venues displayed
+const VENUE_COUNT = 2;
 
 class App extends Component {
   constructor(props) {
@@ -24,28 +24,21 @@ class App extends Component {
       selectedCategory: 'all'
     };
     // Refs are used to store marker node references in an array and to link locations in sidebar with markers
-    // more on refs => https://reactjs.org/docs/refs-and-the-dom.html
     this.markerRefs = [];
     for(let i = 0; i < VENUE_COUNT; i++){
       this.markerRefs.push(React.createRef());
     }
-    // setting context for 'this' inside methods to App class
-    this.openInfoWindow = this.openInfoWindow.bind(this);
-    this.closeInfoWindow = this.closeInfoWindow.bind(this);
-    this.onListClick = this.onListClick.bind(this);
-    this.onSelectCategory = this.onSelectCategory.bind(this);
-    this.onMapError = this.onMapError.bind(this);
   }
 
-  //Fetch trending venues list through Foursquare API
+  // Fetch trending venues list through Foursquare API
   componentDidMount(){
     //Foursquare API credentials
     const CLIENT_ID = `${process.env.REACT_APP_FS_CLIENT_ID}`;
     const CLIENT_SECRET = `${process.env.REACT_APP_FS_CLIENT_SECRET}`;
 
     fetch(`https://api.foursquare.com/v2/venues/explore?near=Tampa&section=trending&limit=${VENUE_COUNT}&client_id=${CLIENT_ID}&client_secret=${CLIENT_SECRET}&v=20180323`)
-    .then((response) => response.json())
-    .then((response) => {
+    .then(response => response.json())
+    .then(response => {
         let fslocations = response.response.groups[0].items;
         let venues = [];
         let cats = [];
@@ -63,15 +56,13 @@ class App extends Component {
         })
         this.setState({categories: cats, locations: venues});
     })
-    .catch((e) => console.log(e))
+    .catch(e => console.log(e))
   }
 
-  //Google map is not loaded successfully
-  onMapError(){
-    this.setState({ googleMapLoaded: false })
-  }
+  // Google map is not loaded successfully
+  onMapError = () => this.setState({ googleMapLoaded: false })
 
-  openInfoWindow(props, marker){
+  openInfoWindow = (props, marker) => {
     this.setState({
       selectedPlace: props,
       activeMarker: marker,
@@ -79,7 +70,7 @@ class App extends Component {
     })
   }
 
-  closeInfoWindow(){
+  closeInfoWindow = () => {
     this.setState({
       showingInfoWindow: false,
       activeMarker: null,
@@ -89,13 +80,13 @@ class App extends Component {
 
   //retrieve the appropriate marker and props based on index of location clicked in sidebar
   //indexes in filtered list of location correspond to indexs in markerRefs array
-  onListClick(index){
+  onListClick = index => {
     this.state.googleMapLoaded && this.openInfoWindow(this.markerRefs[index].current.props, this.markerRefs[index].current.marker);
   }
 
 
   // When a venue category is selected from drop-down, close any open infowindow and update state
-  onSelectCategory(category){
+  onSelectCategory = category => {
     this.state.showingInfoWindow && this.closeInfoWindow();
     this.setState({ selectedCategory: category});
   }
