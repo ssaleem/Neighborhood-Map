@@ -1,10 +1,8 @@
 import React, { Component } from 'react';
 import {Map, InfoWindow, Marker, GoogleApiWrapper} from 'google-maps-react';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faLightbulb } from '@fortawesome/free-regular-svg-icons'
-
-
-const FS_API_ERR_FALLBACK = 'Sorry something went wrong with Foursquare API...';
+import * as FSAPI from '../utils/foursquareAPI';
+import MapFallback from './MapFallback';
+import InfoWindowDetail from './InfoWindowDetail';
 
 class MyMap extends Component {
 
@@ -72,47 +70,59 @@ class MyMap extends Component {
       height: 'inherit'
     }
     return (
-      <div className="mapDiv">{
-        !mapLoaded ? <p className="gmap-fail">Ideally, you should see a map here! <br/>No map??? :( Sorry something went wrong with Google Maps API.</p> :
-        <Map
-          google={this.props.google}
-          zoom={11}
-          initialCenter={center}
-          bounds={bounds}
-          onClick={this.onMapClick}
-          style={styleMap}
-          mapTypeControl={false}
-          streetViewControl={false}
-          zoomControl={this.x.matches ? true: false}>
-          {visibleLocations.map((location, index) => (
-            <Marker
-                title={location.title}
-                position={location.location}
-                key={index}
-                icon={(showingInfoWindow && selectedPlace.title === location.title)? './img/starb.png' : './img/starg.png'}
-                onClick={markerClick}
-                ref={refs[index]}
-                className={"marker"}
+      <div className="mapDiv">
+        {!mapLoaded
+          ? <MapFallback />
+          : <Map
+              google={this.props.google}
+              zoom={11}
+              initialCenter={center}
+              bounds={bounds}
+              onClick={this.onMapClick}
+              style={this.styleMap}
+              mapTypeControl={false}
+              streetViewControl={false}
+              zoomControl={this.x.matches ? true : false}
+            >
+              {visibleLocations.map ((location, index) => (
+                <Marker
+                  title={location.title}
+                  position={location.location}
+                  key={index}
+                  icon={
+                    showingInfoWindow && selectedPlace.title === location.title
+                      ? './img/starb.png'
+                      : './img/starg.png'
+                  }
+                  onClick={markerClick}
+                  ref={refs[index]}
+                  className={'marker'}
                 />
-            )
-          )}
-          <InfoWindow
-            marker={activeMarker}
-            visible={showingInfoWindow}
-            onClose={closeInfoWindow}>
-              <div className="infowindow">
-                <h3>{selectedPlace.title}</h3>
-                <div className="attraction-info">
-                  {/* if Foursquare fetch is not complete or fetch failed, load fallback image and fallback text*/}
-                  <img src={(this.state.foursquareData[selectedPlace.title] && this.state.foursquareData[selectedPlace.title]['bestPhoto']) || './img/ohno.jpg'} alt={`${selectedPlace.title}`} className="attraction-img"/>
-                  <p className="attraction-tip"><FontAwesomeIcon icon={faLightbulb} className="bulb-logo"/>  {(this.state.foursquareData[selectedPlace.title] && this.state.foursquareData[selectedPlace.title]['tip']) || FS_API_ERR_FALLBACK}</p>
-                </div>
-              </div>
-          </InfoWindow>
-
-        </Map>}
+              ))}
+              <InfoWindow
+                marker={activeMarker}
+                visible={showingInfoWindow}
+                onClose={closeInfoWindow}
+              >
+                <InfoWindowDetail
+                  title={selectedPlace.title}
+                  photo={
+                    (this.state.foursquareData[selectedPlace.title] &&
+                      this.state.foursquareData[selectedPlace.title][
+                        'bestPhoto'
+                      ]) ||
+                      './img/ohno.jpg'
+                  }
+                  tip={
+                    (this.state.foursquareData[selectedPlace.title] &&
+                      this.state.foursquareData[selectedPlace.title]['tip']) ||
+                      FSAPI.FS_API_ERR_FALLBACK
+                  }
+                />
+              </InfoWindow>
+            </Map>}
       </div>
-    )
+    );
   }
 }
 
